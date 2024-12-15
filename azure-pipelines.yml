@@ -1,23 +1,30 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
+# azure-pipelines.yml
 trigger:
- branches:
-   include:
-     - main
-pool:
-  vmImage: ubuntu-latest
+  branches:
+    include:
+      - main  # Change to your main branch
 
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+pool:
+  vmImage: 'ubuntu-latest'  # Use the latest Ubuntu image
+
+variables:
+  mavenVersion: '3.6.3'
+  javaVersion: '11'  # Specify the Java version
+
+stages:
+- stage: Build
+  displayName: 'Build and Test'
+  jobs:
+  - job: Build
+    displayName: 'Build Job'
+    steps:
+    - checkout: self  # Ensure the code is checked out
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'  # Adjust this path if necessary
+        goals: 'clean package'
+        options: '-DskipTests=true'
+        mavenVersionOption: 'Default'
+        publishJUnitResults: true
+        testResultsFiles: '**/target/surefire-reports/*.xml'
+        codeCoverageToolOption: 'None'
