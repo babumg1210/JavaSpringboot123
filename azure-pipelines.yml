@@ -21,7 +21,7 @@ stages:
     - checkout: self  # Ensure the code is checked out
     - task: Maven@3
       inputs:
-        mavenPomFile: 'pom.xml'  # Adjust this path if necessary
+        mavenPomFile: 'javaSpringBoot-master/pom.xml'  # Adjust this path if necessary
         goals: 'clean package'
         options: '-DskipTests=true'
         mavenVersionOption: 'Default'
